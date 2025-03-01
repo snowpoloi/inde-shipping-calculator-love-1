@@ -32,17 +32,6 @@ const defaultCarrier: Carrier = {
   serviceZones: []
 };
 
-// Οι διαθέσιμες ζώνες
-const availableZones = [
-  "ΑΘΗΝΑ", 
-  "ΑΘΗΝΑ 2", 
-  "ΘΕΣΣΑΛΟΝΙΚΗ", 
-  "ΚΕΝΤΡΙΚΗ ΕΛΛΑΔΑ", 
-  "ΒΟΡΕΙΑ ΕΛΛΑΔΑ", 
-  "ΝΗΣΙΑ", 
-  "ΝΗΣΙΑ 2"
-];
-
 // Αντιστοίχιση ζωνών με κατηγορίες
 const zoneCategories: Record<string, "ΑΘΗΝΑ" | "ΧΕΡΣΑΙΟΙ" | "ΝΗΣΙΩΤΙΚΟΙ"> = {
   "ΑΘΗΝΑ": "ΑΘΗΝΑ",
@@ -138,6 +127,9 @@ const CarrierForm = ({ initialData, onSave, onCancel }: CarrierFormProps) => {
         : "Η μεταφορική προστέθηκε επιτυχώς"
     });
   };
+
+  // Λαμβάνουμε δυναμικά τις διαθέσιμες ζώνες από το context
+  const availableZones = state.zones || [];
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -261,7 +253,7 @@ const CarrierForm = ({ initialData, onSave, onCancel }: CarrierFormProps) => {
                     className="h-4 w-4"
                   />
                   <Label htmlFor={`zone-${zone}`} className="cursor-pointer">
-                    {zone} <span className="text-sm text-muted-foreground">({zoneCategories[zone]})</span>
+                    {zone} {zoneCategories[zone] && <span className="text-sm text-muted-foreground">({zoneCategories[zone]})</span>}
                   </Label>
                 </div>
               ))}
