@@ -27,14 +27,16 @@ interface AppContextType {
   deleteZone: (zone: string) => void;
 }
 
-// Αρχικές ζώνες (συλλέγουμε όλες τις μοναδικές ζώνες από τις μεταφορικές)
-const collectInitialZones = (carriers: Carrier[]) => {
-  const zones = new Set<string>();
-  carriers.forEach(carrier => {
-    carrier.serviceZones?.forEach(zone => zones.add(zone));
-  });
-  return Array.from(zones);
-};
+// Αρχικές ζώνες - Τώρα ορίζονται ανεξάρτητα
+const initialZones = [
+  "ΑΘΗΝΑ", 
+  "ΘΕΣΣΑΛΟΝΙΚΗ", 
+  "ΧΕΡΣΑΙΟΙ ΠΡΟΟΡΙΣΜΟΙ", 
+  "ΝΗΣΙΩΤΙΚΟΙ ΠΡΟΟΡΙΣΜΟΙ", 
+  "ΚΕΝΤΡΙΚΗ ΕΛΛΑΔΑ", 
+  "ΝΗΣΙΑ", 
+  "ΝΗΣΙΑ 2"
+];
 
 const initialCarriers: Carrier[] = [
   {
@@ -190,7 +192,7 @@ const defaultInitialState: AppState = {
   carriers: initialCarriers,
   postalCodes: initialPostalCodes,
   offers: initialOffers,
-  zones: collectInitialZones(initialCarriers)
+  zones: initialZones // Χρησιμοποιούμε τώρα την ανεξάρτητη λίστα ζωνών
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -264,14 +266,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       serviceZones: carrier.serviceZones || []
     };
     setState(prevState => {
-      // Προσθήκη νέων ζωνών στο state
-      const updatedZones = new Set([...prevState.zones]);
-      newCarrier.serviceZones?.forEach(zone => updatedZones.add(zone));
-      
       return {
         ...prevState,
-        carriers: [...prevState.carriers, newCarrier],
-        zones: Array.from(updatedZones)
+        carriers: [...prevState.carriers, newCarrier]
       };
     });
   };
@@ -287,14 +284,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         serviceZones: carrier.serviceZones || []
       };
       
-      // Συλλογή όλων των ζωνών μετά την ενημέρωση
-      const allZones = new Set([...prevState.zones]);
-      updatedCarrier.serviceZones?.forEach(zone => allZones.add(zone));
-      
       return {
         ...prevState,
-        carriers: prevState.carriers.map(c => c.id === carrier.id ? updatedCarrier : c),
-        zones: Array.from(allZones)
+        carriers: prevState.carriers.map(c => c.id === carrier.id ? updatedCarrier : c)
       };
     });
   };
@@ -303,17 +295,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setState(prevState => {
       const updatedCarriers = prevState.carriers.filter(c => c.id !== id);
       
-      // Επανυπολογισμός των ζωνών
-      const remainingZones = new Set<string>();
-      updatedCarriers.forEach(carrier => {
-        carrier.serviceZones?.forEach(zone => remainingZones.add(zone));
-      });
-      
       return {
         ...prevState,
         carriers: updatedCarriers,
-        offers: prevState.offers.filter(o => o.carrierId !== id),
-        zones: Array.from(remainingZones)
+        offers: prevState.offers.filter(o => o.carrierId !== id)
       };
     });
   };
@@ -394,7 +379,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }));
   };
   
-  // Νέες λειτουργίες για διαχείριση ζωνών
+  // Ανανεωμένες λειτουργίες για διαχείριση ζωνών
   const addZone = (zone: string) => {
     if (!state.zones?.includes(zone)) {
       setState(prevState => ({
@@ -491,7 +476,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         return true;
       });
       
-      // Ενημέρωση της λίστας των ζωνών
+      // Ενημέρωση της λίστας των ζωνών - αφαιρούμε μόνο τη συγκεκριμένη ζώνη
       const updatedZones = (prevState.zones || []).filter(z => z !== zone);
       
       return {
