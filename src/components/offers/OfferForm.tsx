@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,7 +66,6 @@ const OfferForm = ({ initialData, carriers, onSave, onCancel }: OfferFormProps) 
   
   const { toast } = useToast();
 
-  // Διασφαλίζουμε ότι η λίστα ζωνών είναι πάντα διαθέσιμη
   const availableZones = state.zones || [];
 
   useEffect(() => {
@@ -79,7 +77,6 @@ const OfferForm = ({ initialData, carriers, onSave, onCancel }: OfferFormProps) 
         const weightOffer = initialData as WeightOffer;
         const updatedOffer: WeightOffer = {
           ...weightOffer,
-          // Εξασφαλίζουμε ότι το zoneNames είναι πάντα array
           zoneNames: weightOffer.zoneNames || []
         };
         setWeightOfferData(updatedOffer);
@@ -218,7 +215,6 @@ const OfferForm = ({ initialData, carriers, onSave, onCancel }: OfferFormProps) 
         return;
       }
 
-      // Βεβαιωνόμαστε ότι το zoneNames υπάρχει και έχει τουλάχιστον ένα στοιχείο
       if (!weightOfferData.zoneNames || weightOfferData.zoneNames.length === 0) {
         toast({
           title: "Σφάλμα",
@@ -265,7 +261,6 @@ const OfferForm = ({ initialData, carriers, onSave, onCancel }: OfferFormProps) 
         return;
       }
       
-      // Έλεγχος για τις ζώνες εξυπηρέτησης
       if (!zoneCubicOfferData.zoneNames || zoneCubicOfferData.zoneNames.length === 0) {
         toast({
           title: "Σφάλμα",

@@ -1,9 +1,9 @@
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Carrier } from "@/types/Carrier";
 import { Offer, WeightOffer, ZoneCubicOffer } from "@/types/Offer";
 import { Badge } from "@/components/ui/badge";
+import { useAppContext } from "@/context/AppContext";
 
 interface OfferListProps {
   offers: Offer[];
@@ -13,6 +13,8 @@ interface OfferListProps {
 }
 
 const OfferList = ({ offers, carriers, onEdit, onDelete }: OfferListProps) => {
+  const { state } = useAppContext();
+  
   const getCarrierName = (carrierId: string) => {
     const carrier = carriers.find(c => c.id === carrierId);
     return carrier ? carrier.name : "Άγνωστη Μεταφορική";

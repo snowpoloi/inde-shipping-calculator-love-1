@@ -15,6 +15,6 @@ export type Carrier = {
   servicedPostalCodes: string[];
   remotePostalCodes: string[];
   noAntiCashPostalCodes: string[];
-  // Ζώνες εξυπηρέτησης
+  // Ζώνες εξυπηρέτησης - χρησιμοποιείται δυναμικά από το AppContext
   serviceZones: string[];
 };
