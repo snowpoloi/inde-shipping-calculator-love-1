@@ -6,6 +6,7 @@ import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Switch } from "../ui/switch";
 import { PostalCode } from "@/types/PostalCode";
+import { useAppContext } from "@/context/AppContext";
 
 interface PostalCodeFormProps {
   initialData?: PostalCode;
@@ -23,20 +24,9 @@ const emptyPostalCode: PostalCode = {
   isRemote: false
 };
 
-// Διαθέσιμες ζώνες για επιλογή
-const availableZones = [
-  "ΑΘΗΝΑ",
-  "ΘΕΣΣΑΛΟΝΙΚΗ",
-  "ΚΕΝΤΡΙΚΗ ΕΛΛΑΔΑ",
-  "ΒΟΡΕΙΑ ΕΛΛΑΔΑ",
-  "ΝΗΣΙΑ",
-  "ΝΗΣΙΑ 2",
-  "ΧΕΡΣΑΙΟΙ ΠΡΟΟΡΙΣΜΟΙ",
-  "ΝΗΣΙΩΤΙΚΟΙ ΠΡΟΟΡΙΣΜΟΙ"
-];
-
 const PostalCodeForm = ({ initialData, onSave, onCancel }: PostalCodeFormProps) => {
   const [formData, setFormData] = useState<PostalCode>(initialData || emptyPostalCode);
+  const { state } = useAppContext();
 
   useEffect(() => {
     if (initialData) {
@@ -130,7 +120,7 @@ const PostalCodeForm = ({ initialData, onSave, onCancel }: PostalCodeFormProps) 
               <SelectValue placeholder="Επιλέξτε ζώνη" />
             </SelectTrigger>
             <SelectContent>
-              {availableZones.map((zone) => (
+              {state.zones.map((zone) => (
                 <SelectItem key={zone} value={zone}>
                   {zone}
                 </SelectItem>
